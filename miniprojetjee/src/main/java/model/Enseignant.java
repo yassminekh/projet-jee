@@ -35,5 +35,8 @@ public class Enseignant {
 	public void setMotDePasse(String motDePasse) {
 		this.motDePasse = motDePasse;
 	}
- 
+	 // Méthode pour vérifier l'authentification de l'enseignant
+    public boolean authenticate(String nom, String motDePasse) {
+        return this.nom.equals(nom) && this.motDePasse.equals(motDePasse);
+    }
 }
