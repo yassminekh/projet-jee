@@ -11,7 +11,29 @@ public class Enseignant {
 
     private String nom;
     private String motDePasse;
-    // Autres attributs et méthodes nécessaires
-
-    // Constructeurs, getters et setters
+	public Enseignant(int id, String nom, String motDePasse) {
+		super();
+		this.id = id;
+		this.nom = nom;
+		this.motDePasse = motDePasse;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getNom() {
+		return nom;
+	}
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+	public String getMotDePasse() {
+		return motDePasse;
+	}
+	public void setMotDePasse(String motDePasse) {
+		this.motDePasse = motDePasse;
+	}
+ 
 }
