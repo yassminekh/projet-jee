@@ -1,33 +1,77 @@
 package controller;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import dao.AdminDAO;
+import dao.AgentTirageDAO;
+import dao.EnseignantDAO;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/loginServlet")
+@WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        
-        // Code pour v�rifier les informations d'identification dans la base de donn�es
-        
-        // Redirection en fonction du r�le de l'utilisateur (enseignant, agent de tirage, administrateur)
-     // Redirection en fonction du r�le de l'utilisateur (enseignant, agent de tirage, administrateur)
-        if (isEnseignant(username, password)) {
-            response.sendRedirect("enseignant.jsp");
-        } else if (isAgentTirage(username, password)) {
-            response.sendRedirect("agentTirage.jsp");
-        } else if (isAdmin(username, password)) {
-            response.sendRedirect("administrateur.jsp");
-        } else {
-            // Redirection vers une page d'erreur si l'utilisateur n'a pas de r�le valide
+      
+        // Vérifier si les champs de nom d'utilisateur et de mot de passe sont vides
+        if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+            // Rediriger vers une page d'erreur indiquant que les champs sont vides
             response.sendRedirect("error.jsp");
+            return;
         }
+        
+        // Vérifier si l'utilisateur est un enseignant
+        if (isEnseignant(username, password)) {
+            // Stocker le rôle dans la session
+            HttpSession session = request.getSession();
+            session.setAttribute("role", "enseignant");
+            // Rediriger vers la page de l'enseignant
+            response.sendRedirect("enseignant.jsp");
+            return;
+        }
+        
+        // Vérifier si l'utilisateur est un agent de tirage
+        if (isAgentTirage(username, password)) {
+            // Stocker le rôle dans la session
+            HttpSession session = request.getSession();
+            session.setAttribute("role", "agentTirage");
+            // Rediriger vers la page de l'agent de tirage
+            response.sendRedirect("agentTirage.jsp");
+            return;
+        }
+        
+        // Vérifier si l'utilisateur est un administrateur
+        if (isAdmin(username, password)) {
+            // Stocker le rôle dans la session
+            HttpSession session = request.getSession();
+            session.setAttribute("role", "administrateur");
+            // Rediriger vers la page de l'administrateur
+            response.sendRedirect("administrateur.jsp");
+            return;
+        }
+        
+        // Si l'utilisateur n'appartient à aucun des rôles définis, rediriger vers une page d'erreur
+        response.sendRedirect("error.jsp");
+    }
 
+    private boolean isEnseignant(String username, String password) {
+        // Utilisez la méthode de DAO pour vérifier si l'utilisateur est un enseignant
+        return EnseignantDAO.getByUsernameAndPassword(username, password) != null;
+    }
+
+    private boolean isAgentTirage(String username, String password) {
+        // Implémentez la logique pour vérifier si l'utilisateur est un agent de tirage
+        return AgentTirageDAO.getByUsernameAndPassword(username, password) != null;
+    }
+
+    private boolean isAdmin(String username, String password) {
+        // Implémentez la logique pour vérifier si l'utilisateur est un administrateur
+        return AdminDAO.getByUsernameAndPassword(username, password) != null;
     }
 }
