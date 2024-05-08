@@ -48,7 +48,7 @@ public class Register extends HttpServlet {
 	        request.getSession().setAttribute("registeredUsername", username);
 	        request.getSession().setAttribute("registeredMdp", password);
 	        request.getSession().setAttribute("registeredRole", role);
-	        // Insérer les informations dans la table appropriée en fonction du rôle
+	        // InsÃ©rer les informations dans la table appropriÃ©e en fonction du rÃ´le
 	        if ("admin".equals(role)) {
 	            AdminDAO.save(new Administrateur(username, password, email));
 	        } else if ("enseignant".equals(role)) {
@@ -59,7 +59,7 @@ public class Register extends HttpServlet {
 
 	        // Rediriger vers la page de connexion
 	        response.sendRedirect("login.jsp");
-		doGet(request, response);
+		
 	}
 
 }
